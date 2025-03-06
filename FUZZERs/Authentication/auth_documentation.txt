@@ -1,0 +1,58 @@
+Overview
+
+This script is designed to fuzz a calculator API which may contain anti-fuzzing mechanisms. It targets the login endpoint of the API and attempts to bypass both username/password authentication and Multi-Factor Authentication (MFA) mechanisms.
+Prerequisites
+
+    Python 3+
+    requests library: Install using pip: pip install requests
+
+Key Components
+1. Configuration Variables:
+
+    base_url: The base URL for the calculator API.
+    usernames and passwords: Lists of commonly used usernames and passwords for testing. An additional password list is read from password_list.txt.
+    mfa_codes: A list of potential MFA codes (6-digit codes).
+
+2. Regular Expressions:
+
+    success_indicator: A regex pattern to identify successful login responses.
+    failure_indicator: A regex pattern to identify failed login responses.
+
+3. Functions:
+a. login_worker()
+
+This function tries to login to the API using combinations of usernames and passwords. For each attempt:
+
+    Logs the time taken for the request.
+    Identifies the login result (success, failure, or unknown) using regex patterns.
+    Introduces a random delay between attempts to avoid being detected.
+
+b. mfa_worker()
+
+This function tries to bypass the MFA by trying all possible MFA codes:
+
+    Shuffles the list of codes before attempting.
+    Logs successful MFA bypasses or failures.
+    Introduces a random delay between attempts.
+
+c. rate_limit_test()
+
+Tests the rate-limiting mechanism of the login endpoint:
+
+    Sends 50 rapid-fire login attempts.
+    Logs the time taken to send all the requests.
+
+4. Threading:
+
+    Uses 10 worker threads (adjustable) to concurrently try different login credentials.
+    Waits for all login attempts to finish.
+    Uses a separate thread for MFA fuzzing.
+    Runs the rate-limit test sequentially.
+
+Instructions
+
+    Ensure that password_list.txt (from GitHub) is present in the working directory.
+    https://github.com/danielmiessler/SecLists/blob/master/Passwords/Common-Credentials/100k-most-used-passwords-NCSC.txt
+    Tailor the success and failure indicators (regex patterns) to match your application's specific responses.
+    Run the script: python3 <script_name>.py
+    Monitor the log file, auth_fuzz.log, for results and insights.

@@ -1,0 +1,48 @@
+Overview:
+
+This script is designed to fuzz different HTTP methods, headers, and payloads across multiple endpoints. The purpose is to identify how the targeted system handles these varied inputs, especially across different HTTP versions. This fuzzer uses the httpx library to perform asynchronous HTTP requests, allowing for faster testing.
+Prerequisites:
+
+    Python 3.7+ (required for native asyncio support)
+    httpx library: Install using pip: pip install httpx
+
+Key Components:
+1. Configuration Variables:
+
+    base_url: The base URL of the target application.
+    endpoints: List of API endpoints to fuzz.
+    http_versions: List of HTTP versions to be tested (HTTP/1.1 and HTTP/2).
+    http_methods: List of HTTP methods to be used for fuzzing.
+    headers: List of different HTTP headers to fuzz with.
+    payloads: List of different payloads or input data to be sent in the request body.
+
+2. Logging:
+
+    Logs are written to a file named http_testing.log.
+    It captures info-level messages indicating the status of each fuzzing attempt, warning-level messages for non-200 response codes, and error-level messages for any exceptions that occur.
+
+3. Fuzzing Function: fuzz_http_versions
+
+    Performs an asynchronous HTTP request to the specified endpoint using the provided HTTP method, headers, and payload.
+    It captures and logs the response time, success messages, and any errors.
+
+4. Main Function:
+
+    Randomly shuffles the endpoints, HTTP versions, methods, headers, and payloads to diversify the fuzzing order.
+    Creates a list of tasks that will be run asynchronously.
+    Uses Python's asyncio.gather() to execute all the tasks concurrently.
+
+Instructions:
+
+    Ensure your Python version is 3.7 or newer.
+    Install the required libraries.
+    Update the configuration variables (base_url, endpoints, etc.) to match your target system.
+    Run the script: python3 <script_name>.py.
+    After the script finishes, review the logs in http_testing.log for any unexpected responses or errors.
+
+Notes:
+
+    Running a fuzzer can produce unintended side effects on a system, such as triggering security mechanisms or causing the system to become unresponsive. Always ensure you have permission to perform the testing, and it's a good idea to run this in a controlled environment first.
+    The script uses httpx.AsyncClient to perform asynchronous HTTP requests. The http2 parameter is set based on the HTTP version being tested. If HTTP/2 is being tested, this parameter is set to True.
+    This script can generate a large number of requests in a short amount of time. Ensure your target system can handle this load or consider introducing some rate limiting.
+    The payloads include some SQL injection attempts (like ' OR '1'='1 and SELECT * FROM users). If your application uses a SQL database and lacks proper input validation and sanitization, there's a risk of potential SQL injection. Make sure to test in a secure environment and always backup any critical data before testing.

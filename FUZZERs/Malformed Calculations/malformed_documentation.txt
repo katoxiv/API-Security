@@ -1,0 +1,47 @@
+Overview:
+
+This script is intended to fuzz a calculator endpoint with potentially incorrect or malformed inputs, verifying that the system handles them correctly. By using a combination of valid and invalid inputs, this tool checks for vulnerabilities, logic flaws, or other types of issues.
+Prerequisites:
+
+    Python 3.6+
+    requests library: pip install requests
+
+Key Components:
+1. Configuration Variables:
+
+    Logging Setup: Configures a logging setup to save messages in the file malformed_fuzzer.log.
+    URL and Endpoint: Specifies the URL of the API and the calculator endpoint for testing.
+    Operations: A list of arithmetic and mathematical operations the calculator is expected to support.
+    Fuzzing Inputs: A varied set of numbers, both integer and float, including edge cases, which are going to be used to fuzz the calculator.
+
+2. Main Functions:
+simple_calculate(ops, vals):
+
+    This function simulates the calculation operation in a simplified manner. It iterates over the operations and computes the result. It includes basic error checks and handling.
+
+fuzz_calculator():
+
+    Picks items from the queue. Each item consists of a random list of inputs and operations.
+    Sends a POST request to the calculator endpoint with the generated data.
+    Uses the simple_calculate function to compute the expected result locally and then checks the endpoint's response for discrepancies or errors.
+    If the endpoint returns an incorrect result or a non-200 status code, the function logs the error.
+
+start_fuzzer(threads):
+
+    Populates the queue with random operations and input combinations.
+    Initiates a specified number of threads to perform the fuzzing in parallel.
+
+Instructions:
+
+    Ensure you have Python and the required libraries installed.
+    Modify the base_url and endpoint according to the actual address and route of the API you're testing.
+    Run the script with: python3 <script_name>.py.
+    Check the log file malformed_fuzzer.log for any recorded discrepancies or errors. These indicate potential issues or vulnerabilities with the tested calculator endpoint.
+
+Notes:
+
+    Multithreading: This fuzzer uses Python's threading to execute multiple tests in parallel, improving the speed of testing. The number of threads can be adjusted in the start_fuzzer function call in the main part of the script.
+    Fault Tolerance: If the endpoint responds with an error or produces an incorrect calculation result, the fuzzer will log the problematic input and operations. This way, developers can review and address specific cases that lead to failures.
+    Complex Operations Handling: Some operations like factorial (fact) expect integer values. The fuzzer does check for these cases and returns a NaN (not a number) value if the conditions are not met.
+    Potential Risks: Ensure that the targeted system has appropriate safeguards against potential DoS attacks, as this script can send a substantial amount of requests in a short time.
+    Customization: If the targeted system's calculator supports more operations or requires other special inputs, you can easily extend the operations and inputs lists to accommodate them.

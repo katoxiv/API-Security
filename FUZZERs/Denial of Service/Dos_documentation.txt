@@ -1,0 +1,50 @@
+Overview
+
+This script uses asynchronous programming to fuzz a given API for potential denial-of-service vulnerabilities. It aims to test the robustness of the target API by sending a large volume of requests in a short period, focusing on the endpoints /calculate, /login, and /signup.
+Prerequisites
+
+    Python 3.7+
+    aiohttp library: Install using pip: pip install aiohttp
+
+Key Components
+1. Configuration Variables:
+
+    base_url: The base URL of the target API.
+    endpoints: The API endpoints being targeted for fuzzing.
+    operations: A list of operations for calculator-related endpoints.
+    inputs: Range of integer values from -1000 to 1000 for fuzzing.
+
+2. Logging:
+
+    Logs are written to dos_fuzz.log, capturing both info and error-level messages.
+
+3. CSV Output:
+
+Results are written to dos_fuzz.csv detailing the inputs, operation, endpoint, response time, status code, and response text for each request.
+4. Asynchronous Context Manager:
+a. get_writer(file_path)
+
+A context manager to handle opening and closing of the CSV file and providing a writer object.
+5. Asynchronous Functions:
+a. stress_test(...)
+
+    Sends asynchronous HTTP POST requests to the chosen endpoint with random inputs and operations.
+    Tracks and logs the response time, status, and response content.
+    Writes results to the CSV.
+
+b. run(number_of_tests, number_of_connections, writer)
+
+    Coordinates the execution of the stress tests.
+    Utilizes an asyncio semaphore to control the number of concurrent requests.
+
+c. main()
+
+    Initiates the DoS fuzz test with specified parameters (5000 tests with 1000 concurrent connections).
+
+Instructions
+
+    Ensure your target API is set up and can handle the potential volume of requests.
+    Modify the base_url and any other configuration variables as needed.
+    Execute the script with python3 <script_name>.py.
+    Review the dos_fuzz.log for any abnormalities or unexpected behaviors.
+    Analyze the dos_fuzz.csv file to inspect the results for each request sent.

@@ -1,0 +1,66 @@
+Overview
+
+A concurrent API fuzzer designed to detect vulnerabilities in API endpoints by dispatching a range of payloads.
+Sections
+
+    Configurations
+    Set main parameters like the target URL, concurrency level, and timeouts.
+
+    Logging
+    Monitor the fuzzing process and possible vulnerabilities.
+
+    Endpoints & Payloads
+    Define which API routes to target and what malicious data to send.
+
+    Functions
+    Main operational logic for sending requests and logging responses.
+
+    Execution
+    How to run the fuzzer.
+
+    Disclaimer
+    Ethical and legal warning about responsible use.
+
+
+
+1. Configurations
+
+    Base URL: base_url - The target API URL.
+    Concurrency: concurrency - Number of simultaneous threads.
+    Request Timeout: request_timeout - Maximum wait time for each request.
+    Delay Between Requests: delay_between_requests - Time-gap between consecutive requests.
+
+
+
+2. Logging
+
+    Set up via: logging.basicConfig(level=logging.INFO).
+    Captures INFO level events, with warnings for possible vulnerabilities.
+
+
+
+3. Endpoints & Payloads
+
+    Endpoints: endpoints - List of API routes with their expected data fields and HTTP methods.
+    Payloads: general_payloads - Malicious/edge-case data snippets to be sent.
+    Headers: headers_variants - Variations in request headers to simulate different request sources and formats.
+
+
+
+4. Functions
+
+    fuzz(endpoint, details): Sends varied payloads & headers, logs outcomes.
+    main(): Orchestrates the fuzzing across endpoints.
+
+
+
+5. Execution
+
+Run: python script_name.py (Replace script_name.py with your script's filename).
+
+
+
+
+6. Disclaimer
+
+Only use on systems you have permission to test. Unauthorized testing can lead to legal issues and unintended harm.

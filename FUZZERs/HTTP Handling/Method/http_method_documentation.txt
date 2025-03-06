@@ -1,0 +1,57 @@
+Overview:
+
+This script is a simple fuzzer designed to test how different HTTP methods and payloads are handled by specified endpoints. It records the results in a CSV file for further examination.
+Prerequisites:
+
+    Python 3.x
+    requests library: Install using pip: pip install requests
+    fake_useragent library: Install using pip: pip install fake-useragent
+
+Key Components:
+1. Configuration Variables:
+
+    base_url: The base URL of the target system.
+    endpoints: The API endpoints you want to fuzz.
+    methods: List of HTTP methods to be tested.
+    regular_payload: The standard payload data for requests that accept a body (e.g., POST).
+
+2. User Agent Handling:
+
+    Uses UserAgent from the fake_useragent library to generate randomized user agent strings for requests, emulating requests from different browsers.
+
+3. CSV Logging:
+
+    Results, including URL, method used, payload, status code, and response (or error) are written to http_method_fuzzing_results.csv.
+
+4. Key Functions:
+a. random_string(length=10):
+
+    Generates a random string, useful for creating fuzzed data.
+
+b. fuzz_method(args):
+
+    The main fuzzing function that tries the specified HTTP method against the provided URL with the given data.
+    Handles exceptions and retries requests (with exponential backoff) up to 5 times if there's an error.
+    If the method can accept a body (POST, PUT, PATCH), it also sends a fuzzed request with random keys and values.
+
+c. fuzz_params():
+
+    A generator function that produces combinations of URLs, methods, and payloads to be tested.
+
+d. main():
+
+    Utilizes the multiprocessing library to parallelize the fuzzing, thereby speeding up the process.
+    Each combination from fuzz_params is processed in parallel using the fuzz_method.
+
+Instructions:
+
+    Update the base_url and endpoints variables to match your target system.
+    Run the script: python3 <script_name>.py.
+    After the script finishes, check the http_method_fuzzing_results.csv file to review the results.
+
+Notes:
+
+    Fuzzing can produce unexpected results and behaviors in the target system. Always backup data and applications before running such scripts, and ensure you have permissions to perform the testing.
+    The fake_useragent library fetches the latest user agent strings from various sources, which means this script requires internet connectivity initially (when creating the UserAgent object). Ensure you're connected when starting the script.
+    Exponential backoff: If a request fails, the script will wait 2^i seconds before retrying, where i is the retry count. This helps to avoid hammering a system that might be experiencing temporary issues.
+    The script automatically generates random payloads for HTTP methods that typically send data (POST, PUT, PATCH). This is to check how the system handles unexpected inputs. Adjust this behavior as needed based on your testing goals.

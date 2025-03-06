@@ -1,0 +1,56 @@
+Overview:
+
+This script attempts to simulate replay attacks against a specific API endpoint. A replay attack involves re-sending a valid data transmission maliciously, usually without the knowledge or consent of both parties, to obtain an unauthorized advantage.
+Prerequisites:
+
+    Python 3.6+
+    requests library: pip install requests
+
+Key Components:
+1. Configuration:
+
+    Logger Setup: Records the progress, potential issues, and the outcomes of each request during the execution.
+    Constants:
+        base_url: The base URL of the target application.
+        endpoint: The specific API endpoint you're testing.
+        delay: The time (in seconds) to wait between the original request and the replay.
+        attempts: The number of times the script will attempt the replay attack.
+        data: The payload for the request.
+        headers: Any specific headers required for the request.
+
+2. Replay Logic:
+test_replay_attack():
+
+    Loops for a specified number of attempts.
+    Sends an initial request.
+    Waits for a certain delay.
+    Sends another request with identical data and headers.
+    Compares the responses. If they're identical, it logs a warning since this may indicate susceptibility to replay attacks.
+
+send_request(data, headers):
+
+    Sends a POST request to the specified endpoint with the provided data and headers.
+    Returns the response or None if there's an error.
+
+log_response(response):
+
+    Logs the status and content of a response.
+
+3. Execution:
+
+When executed (if __name__ == '__main__':), it starts the test_replay_attack() function.
+Instructions:
+
+    Install the required Python libraries.
+    Adjust the constants (base_url, endpoint, data, etc.) as per your testing requirements.
+    Make sure you have permission to test the target. Unauthorized testing is both illegal and unethical.
+    Run the script: python3 <script_name>.py.
+    Review the replay_attack_fuzzer.log to check for potential vulnerabilities.
+
+Notes:
+
+    Significance of Replay: If the system doesn't detect or prevent the second identical request, it may be vulnerable to replay attacks. This could allow an attacker to benefit by replaying a transaction (e.g., transferring money).
+    Delay Between Requests: The delay is introduced to mimic real-life conditions, where an attacker might delay the replay to avoid immediate detection.
+    Caution: Replaying requests, especially those with side effects (e.g., changing data, making purchases), can have unintended consequences. Always test in a safe environment where changes can be easily reverted and won't have lasting effects.
+    Logging: Proper logging is crucial to understand the behavior of the application in response to the replayed requests. Analyzing these logs can reveal potential vulnerabilities.
+    Consent: Only use this script on systems you have explicit permission to test. Unauthorized scanning can result in legal consequences and potential harm to systems.

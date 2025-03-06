@@ -1,0 +1,58 @@
+Overview:
+
+The script is designed to identify potential path traversal vulnerabilities in web applications. It attempts to fetch sensitive files by fuzzing URL paths with combinations of traversal strings and file names.
+
+Path traversal (also known as directory traversal) is a web security vulnerability that allows an attacker to read arbitrary files on the server that is running an application.
+Prerequisites:
+
+    Python 3.6+
+    requests library: pip install requests
+
+Key Components:
+1. Configuration:
+
+    Logger Setup: Records the progress and any potential issues during execution.
+    Constants: Essential settings and data sources, including:
+        User agents to mimic different web browsers.
+        Path traversal patterns, sensitive file names, file extensions, and special characters.
+        Base URL of the target web application.
+        The number of concurrent threads and other retry configurations.
+
+2. Fuzzing Logic:
+send_request(fuzz_case):
+
+For each combination (fuzz_case) of path traversal strings, file names, extensions, and special characters:
+
+    Constructs a URL to test.
+    Sends an HTTP GET request.
+    If the request succeeds, logs the data including response details to a CSV file.
+    If an error (like timeout, connection error, etc.) occurs, retries the request up to MAX_RETRIES times with exponential backoff.
+
+log_to_csv(data):
+
+    Logs given data to the CSV file. Uses a lock (csv_lock) to ensure thread-safety when writing to the file concurrently.
+
+3. Execution:
+
+When executed:
+
+    Writes the header of the CSV.
+    Creates multiple threads (specified by THREAD_COUNT) to send requests concurrently, improving the efficiency of fuzzing.
+
+Instructions:
+
+    Install the required Python libraries.
+    Adjust the BASE_URL to point to the target web application you wish to test.
+    Ensure you have permission to test the target, as unauthorized testing is illegal and unethical.
+    Run the script with: python3 <script_name>.py.
+    Review the path_traversal.log and path_traversal.csv for potential vulnerabilities and the paths that triggered them.
+        For example, a 200 OK status code for sensitive file paths might indicate a vulnerability.
+
+Notes:
+
+    User Agents: Randomly selecting user agents can mimic different web browsers, making it less likely to be blocked by simple user-agent filtering.
+    Exponential Backoff: This mechanism increases the delay between retries, helping prevent rapid-fire requests that could lead to denial-of-service or trigger rate-limiting mechanisms.
+    Thread Safety: The csv_lock ensures that threads don't attempt to write to the CSV file simultaneously, which could corrupt the file.
+    Limitations: As with any tool, this script might not find all vulnerabilities, and some positives could be false. Manual verification is advised.
+    Caution: This is an aggressive tool. Use it responsibly and only on systems you have permission to test. Unauthorized scanning can result in legal consequences and damage to systems. Always obtain explicit permission before running security tests.
+

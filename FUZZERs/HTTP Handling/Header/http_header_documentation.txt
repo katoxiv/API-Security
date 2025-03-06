@@ -1,0 +1,59 @@
+Overview:
+
+This script fuzzes a target API endpoint (/calculate) to check for potential vulnerabilities related to various HTTP headers and methods. It sends requests using a combination of payloads, methods, headers, and user agents, then logs responses that indicate potential security issues.
+Prerequisites:
+
+    Python 3.x
+    requests library: Install using pip: pip install requests
+
+Key Components:
+1. Configuration Variables:
+
+    base_url: The base URL of the target API.
+    endpoint: The API endpoint being targeted for fuzzing.
+    payloads: A list of various input payloads to be used in the fuzzing process.
+    methods: A list of HTTP methods to be used in the fuzzing process.
+    error_messages: Indicators that the API responded with an error or exception.
+    headers: A comprehensive list of HTTP headers and their potential values to fuzz.
+    user_agents: Different user agents to be included in the fuzzing process.
+
+2. Threading:
+
+    queue: A thread-safe queue used to store combinations of payload, method, header, and user agent.
+    rate_limit: A semaphore to control the request rate to the target API. Set at 5 requests per second.
+    sleep_interval: Time in seconds that the script sleeps between requests.
+
+3. Logging:
+
+    The script logs its activity into http_header_fuzzer.log. Logs include potential vulnerabilities, errors, and other informational messages.
+    RotatingFileHandler ensures that log files don't get too large. When one log file exceeds 10,000 bytes, a new log file is created. A maximum of 3 log files will be created before the oldest one gets overwritten.
+
+4. Key Functions:
+a. fuzz_exceptions(item):
+
+    Fuzzes the API with a given payload, method, header, and user agent.
+    Sends the request, logs the response time, and checks if the API responded with an error or exception.
+
+b. start_fuzzer(threads):
+
+    Sets up the fuzzing process by loading the queue with combinations of payloads, methods, headers, and user agents.
+    Starts a given number of worker threads.
+
+c. consume_queue():
+
+    Used by the worker threads to continuously pull from the queue and fuzz the API until the queue is empty.
+
+Instructions:
+
+    Make sure you have the right permissions to test the target application.
+    Modify the base_url, endpoint, and any other configuration variables as needed.
+    Execute the script with python3 <script_name>.py.
+    Review the http_header_fuzzer.log to check for potential vulnerabilities or errors.
+    Adjust the number of threads (threads parameter in start_fuzzer()) based on the capacity of the target system and your testing goals.
+
+Notes:
+
+    The fuzzing process uses a combination of various payloads, HTTP methods, headers, and user agents to create a large number of potential requests.
+    The script shuffles the payloads, methods, headers, and user agents randomly for each run, so subsequent runs will likely test different combinations.
+    Ensure the target system is prepared to handle a significant volume of requests in a short time, as this script can quickly generate many requests, especially when using multiple threads. Adjust the rate_limit and sleep_interval as necessary to respect the target system's limits.
+    Always backup data and applications before running such scripts, especially on production systems. This script is intended for use in a controlled testing environment.
