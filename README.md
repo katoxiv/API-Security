@@ -103,6 +103,7 @@ The application provides custom JSON responses for common HTTP errors:
 - **400 Bad Request**
 - **401 Unauthorized**
 - **404 Not Found**
+- **429 Rate Limiter exceeded**
 - **500 Internal Server Error**
 
 These handlers ensure that the client always receives a clear error message in JSON format.
